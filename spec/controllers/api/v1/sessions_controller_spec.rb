@@ -28,4 +28,15 @@ describe Api::V1::SessionsController do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    let!(:user) { create(:user) }
+
+    before(:each) do
+      user.generate_authentication_token!
+      delete :destroy, id: user.reload.auth_token
+    end
+
+    it { should respond_with 204 }
+  end
 end

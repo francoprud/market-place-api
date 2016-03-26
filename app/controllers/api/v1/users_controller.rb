@@ -23,7 +23,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def destroy
-    if @user.present?
+    if @user
       @user.destroy
     end
     head 204
