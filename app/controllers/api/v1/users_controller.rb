@@ -21,6 +21,14 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def destroy
+    user = User.find(params[:id])
+    if user.present?
+      user.destroy
+    end
+    head 204
+  end
+
   private
 
   def user_params

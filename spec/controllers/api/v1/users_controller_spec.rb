@@ -129,4 +129,16 @@ describe Api::V1::UsersController do
       it { should respond_with 422 }
     end
   end
+
+  describe 'DELETE #destroy' do
+    let!(:user) { create(:user) }
+
+    before(:each) { delete :destroy, id: user.id, format: :json }
+
+    it { should respond_with 204 }
+
+    it 'reduces the amount of users' do
+      expect(User.count).to eq 0
+    end
+  end
 end
