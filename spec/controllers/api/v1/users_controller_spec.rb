@@ -1,17 +1,15 @@
 require 'rails_helper'
 
 describe Api::V1::UsersController do
-  before(:each) { request.headers['Accept'] = 'application/vnd.marketplace.v1' }
-
   describe 'GET #show' do
     let!(:user) { create(:user) }
 
-    before(:each) { get :show, id: user.id, format: :json }
+    before(:each) { get :show, id: user.id }
 
     it { should respond_with 200 }
 
     it 'returns the information about the user on a hash' do
-      user_response = JSON.parse(response.body, symbolize_names: true)
+      user_response = json_response
       expect(user_response[:email]).to eq user.email
     end
   end
@@ -26,12 +24,12 @@ describe Api::V1::UsersController do
         }
       end
 
-      before(:each) { post :create, { user: valid_user_attrs }, format: :json }
+      before(:each) { post :create, { user: valid_user_attrs } }
 
       it { should respond_with 201 }
 
       it 'renders the json representation for the user record just created' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
+        user_response = json_response
         expect(user_response[:email]).to eq valid_user_attrs[:email]
       end
     end
@@ -45,7 +43,7 @@ describe Api::V1::UsersController do
           }
         end
 
-        before(:each) { post :create, { user: invalid_user_attrs }, format: :json }
+        before(:each) { post :create, { user: invalid_user_attrs } }
 
         it { should respond_with 422 }
 
@@ -54,12 +52,12 @@ describe Api::V1::UsersController do
         end
 
         it 'renders an error json' do
-          user_response = JSON.parse(response.body, symbolize_names: true)
+          user_response = json_response
           expect(user_response).to have_key(:errors)
         end
 
         it 'renders the json error on why the user could not be created' do
-          user_response = JSON.parse(response.body, symbolize_names: true)
+          user_response = json_response
           expect(user_response[:errors][:email]).to include "can't be blank"
         end
       end
@@ -74,7 +72,7 @@ describe Api::V1::UsersController do
           }
         end
 
-        before(:each) { post :create, { user: valid_user_attrs }, format: :json }
+        before(:each) { post :create, { user: valid_user_attrs } }
 
         it { should respond_with 422 }
 
@@ -83,12 +81,12 @@ describe Api::V1::UsersController do
         end
 
         it 'renders an error json' do
-          user_response = JSON.parse(response.body, symbolize_names: true)
+          user_response = json_response
           expect(user_response).to have_key(:errors)
         end
 
         it 'renders the json error on why the user could not be created' do
-          user_response = JSON.parse(response.body, symbolize_names: true)
+          user_response = json_response
           expect(user_response[:errors][:email]).to include 'has already been taken'
         end
       end
@@ -101,12 +99,12 @@ describe Api::V1::UsersController do
     context 'when is successfully updated' do
       let(:valid_user_attrs) {{ email: 'newemail@domain.com' }}
 
-      before(:each) { patch :update, id: user.id, user: valid_user_attrs, format: :json }
+      before(:each) { patch :update, id: user.id, user: valid_user_attrs }
 
       it { should respond_with 200 }
 
       it 'renders the json representation for the user record just updated' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
+        user_response = json_response
         expect(user_response[:email]).to eq valid_user_attrs[:email]
       end
     end
@@ -114,15 +112,15 @@ describe Api::V1::UsersController do
     context 'when is not updated' do
       let(:invalid_user_attrs) {{ email: 'invalid_mail.com' }}
 
-      before(:each) { patch :update, id: user.id, user: invalid_user_attrs, format: :json }
+      before(:each) { patch :update, id: user.id, user: invalid_user_attrs }
 
       it 'renders an errors json' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
+        user_response = json_response
         expect(user_response).to have_key(:errors)
       end
 
       it 'renders the json errors on whye the user could not be created' do
-        user_response = JSON.parse(response.body, symbolize_names: true)
+        user_response = json_response
         expect(user_response[:errors][:email]).to include 'is invalid'
       end
 
@@ -133,7 +131,7 @@ describe Api::V1::UsersController do
   describe 'DELETE #destroy' do
     let!(:user) { create(:user) }
 
-    before(:each) { delete :destroy, id: user.id, format: :json }
+    before(:each) { delete :destroy, id: user.id }
 
     it { should respond_with 204 }
 

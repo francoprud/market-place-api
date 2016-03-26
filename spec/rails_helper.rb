@@ -6,6 +6,7 @@ abort("The Rails environment is running in production mode!") if Rails.env.produ
 require 'spec_helper'
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 require 'support/factory_girl.rb'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
@@ -55,4 +56,12 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  # Including to test requests
+  config.include Request::JsonHelpers, :type => :controller
+  config.include Request::HeadersHelpers, :type => :controller
+
+  config.before(:each, type: :controller) do
+    include_default_accept_headers
+  end
 end
