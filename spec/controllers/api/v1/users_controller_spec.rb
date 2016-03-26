@@ -94,4 +94,39 @@ describe Api::V1::UsersController do
       end
     end
   end
+
+  describe 'PUT/PATCH #update' do
+    let!(:user) { create(:user) }
+
+    context 'when is successfully updated' do
+      let(:valid_user_attrs) {{ email: 'newemail@domain.com' }}
+
+      before(:each) { patch :update, id: user.id, user: valid_user_attrs, format: :json }
+
+      it { should respond_with 200 }
+
+      it 'renders the json representation for the user record just updated' do
+        user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(user_response[:email]).to eq valid_user_attrs[:email]
+      end
+    end
+
+    context 'when is not updated' do
+      let(:invalid_user_attrs) {{ email: 'invalid_mail.com' }}
+
+      before(:each) { patch :update, id: user.id, user: invalid_user_attrs, format: :json }
+
+      it 'renders an errors json' do
+        user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(user_response).to have_key(:errors)
+      end
+
+      it 'renders the json errors on whye the user could not be created' do
+        user_response = JSON.parse(response.body, symbolize_names: true)
+        expect(user_response[:errors][:email]).to include 'is invalid'
+      end
+
+      it { should respond_with 422 }
+    end
+  end
 end
