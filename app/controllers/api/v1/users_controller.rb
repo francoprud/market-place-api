@@ -1,8 +1,10 @@
 class Api::V1::UsersController < ApplicationController
-  before_filter :find_user, only: [:show, :update, :destroy]
+  before_filter :find_user, only: [:update, :destroy]
+  before_action :authenticate_with_token, only: [:update, :destroy]
 
   def show
-    render json: @user
+    user = User.find(params[:id])
+    render json: user
   end
 
   def create
@@ -36,6 +38,6 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def find_user
-    @user = User.find(params[:id])
+    @user = current_user
   end
 end

@@ -31,4 +31,20 @@ describe Authenticable do
       end
     end
   end
+
+  describe '#user_signed_in?' do
+    let!(:user) { create(:user) }
+
+    context "when there is a user on 'session'" do
+      before(:each) { allow(subject).to receive(:current_user).and_return(user) }
+
+      it { should be_user_signed_in }
+    end
+
+    context "when there is no user on 'session'" do
+      before(:each) { allow(subject).to receive(:current_user).and_return(nil) }
+
+      it { should_not be_user_signed_in }
+    end
+  end
 end
