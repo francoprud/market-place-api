@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
 
   validates :auth_token, uniqueness: true
 
+  has_many :products, dependent: :destroy
+
   before_validation :generate_authentication_token!
 
   # Generate and assigns the auth_token
