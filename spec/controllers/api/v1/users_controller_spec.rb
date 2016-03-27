@@ -9,8 +9,7 @@ describe Api::V1::UsersController do
     it { should respond_with 200 }
 
     it 'returns the information about the user on a hash' do
-      user_response = json_response
-      expect(user_response[:email]).to eq user.email
+      expect(json_response[:email]).to eq user.email
     end
   end
 
@@ -29,8 +28,7 @@ describe Api::V1::UsersController do
       it { should respond_with 201 }
 
       it 'renders the json representation for the user record just created' do
-        user_response = json_response
-        expect(user_response[:email]).to eq valid_user_attrs[:email]
+        expect(json_response[:email]).to eq valid_user_attrs[:email]
       end
     end
 
@@ -52,13 +50,11 @@ describe Api::V1::UsersController do
         end
 
         it 'renders an error json' do
-          user_response = json_response
-          expect(user_response).to have_key(:errors)
+          expect(json_response).to have_key(:errors)
         end
 
         it 'renders the json error on why the user could not be created' do
-          user_response = json_response
-          expect(user_response[:errors][:email]).to include "can't be blank"
+          expect(json_response[:errors][:email]).to include "can't be blank"
         end
       end
 
@@ -81,13 +77,11 @@ describe Api::V1::UsersController do
         end
 
         it 'renders an error json' do
-          user_response = json_response
-          expect(user_response).to have_key(:errors)
+          expect(json_response).to have_key(:errors)
         end
 
         it 'renders the json error on why the user could not be created' do
-          user_response = json_response
-          expect(user_response[:errors][:email]).to include 'has already been taken'
+          expect(json_response[:errors][:email]).to include 'has already been taken'
         end
       end
     end
@@ -99,39 +93,59 @@ describe Api::V1::UsersController do
     context 'when is successfully updated' do
       let(:valid_user_attrs) {{ email: 'newemail@domain.com' }}
 
-      before(:each) { patch :update, id: user.id, user: valid_user_attrs }
+      before(:each) do
+        api_authorization_header(user.auth_token)
+        patch :update, id: user.id, user: valid_user_attrs
+      end
 
       it { should respond_with 200 }
 
       it 'renders the json representation for the user record just updated' do
-        user_response = json_response
-        expect(user_response[:email]).to eq valid_user_attrs[:email]
+        expect(json_response[:email]).to eq valid_user_attrs[:email]
       end
     end
 
     context 'when is not updated' do
-      let(:invalid_user_attrs) {{ email: 'invalid_mail.com' }}
+      context 'because user is not authorized' do
+        let(:valid_user_attrs) {{ email: 'newemail@domain.com' }}
 
-      before(:each) { patch :update, id: user.id, user: invalid_user_attrs }
+        before(:each) { patch :update, id: user.id, user: valid_user_attrs }
 
-      it 'renders an errors json' do
-        user_response = json_response
-        expect(user_response).to have_key(:errors)
+        it { should respond_with 401 }
+
+        it 'renders the json error of unauthorize user' do
+          expect(json_response[:errors]).to eq 'Not authenticated'
+        end
       end
 
-      it 'renders the json errors on whye the user could not be created' do
-        user_response = json_response
-        expect(user_response[:errors][:email]).to include 'is invalid'
-      end
+      context 'because of invalid attributes' do
+        let(:invalid_user_attrs) {{ email: 'invalid_mail.com' }}
 
-      it { should respond_with 422 }
+        before(:each) do
+          api_authorization_header(user.auth_token)
+          patch :update, id: user.id, user: invalid_user_attrs
+        end
+
+        it 'renders an errors json' do
+          expect(json_response).to have_key(:errors)
+        end
+
+        it 'renders the json errors on why the user could not be created' do
+          expect(json_response[:errors][:email]).to include 'is invalid'
+        end
+
+        it { should respond_with 422 }
+      end
     end
   end
 
   describe 'DELETE #destroy' do
     let!(:user) { create(:user) }
 
-    before(:each) { delete :destroy, id: user.id }
+    before(:each) do
+      api_authorization_header(user.auth_token)
+      delete :destroy, id: user.id
+    end
 
     it { should respond_with 204 }
 
