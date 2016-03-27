@@ -16,9 +16,8 @@ describe User do
   it { should validate_uniqueness_of(:email) }
   it { should validate_confirmation_of(:password) }
   it { should allow_value('test@domain.com').for(:email) }
-  it { should validate_uniqueness_of(:auth_token) }
 
-  describe '#generate_authentication_token' do
+  describe '#generate_authentication_token!' do
     let(:unique_token) { 'auniquetoken123' }
     let!(:other_user)  { create(:user, auth_token: unique_token) }
 
