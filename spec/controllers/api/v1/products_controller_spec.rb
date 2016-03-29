@@ -11,6 +11,10 @@ describe Api::V1::ProductsController do
     it 'returns the information about the product on a hash' do
       expect(json_response[:title]).to eq product.title
     end
+
+    it 'returns the user as an embedded model' do
+      expect(json_response[:user][:email]).to eq product.user.email
+    end
   end
 
   describe 'GET #index' do
@@ -22,6 +26,12 @@ describe Api::V1::ProductsController do
 
     it 'returns 5 products from the database' do
       expect(json_response.count).to eq 5
+    end
+
+    it 'returns the user object into each product' do
+      json_response.each do |product_response|
+        expect(product_response[:user]).to be_present
+      end
     end
   end
 
