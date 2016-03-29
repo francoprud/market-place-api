@@ -4,4 +4,9 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   include Authenticable
+
+  # Defines default serializer options for active model serializers
+  def default_serializer_options
+    { root: false }
+  end
 end

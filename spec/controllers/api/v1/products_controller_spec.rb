@@ -21,7 +21,7 @@ describe Api::V1::ProductsController do
     it { should respond_with 200 }
 
     it 'returns 5 products from the database' do
-      expect(json_response[:products].count).to eq 5
+      expect(json_response.count).to eq 5
     end
   end
 
