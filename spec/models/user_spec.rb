@@ -18,6 +18,7 @@ describe User do
   it { should allow_value('test@domain.com').for(:email) }
 
   it { should have_many(:products) }
+  it { should have_many(:orders) }
 
   describe '#generate_authentication_token!' do
     let(:unique_token) { 'auniquetoken123' }
