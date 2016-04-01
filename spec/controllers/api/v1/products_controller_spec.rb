@@ -33,6 +33,22 @@ describe Api::V1::ProductsController do
         expect(product_response[:user]).to be_present
       end
     end
+
+    context 'when product_ids parameter is sent' do
+      let!(:user)          { create(:user) }
+      let!(:user_products) { create_list(:product, 3, user: user) }
+      let(:product_ids)    { Product.where(user: user).ids }
+
+      before(:each) { get :index, product_ids: product_ids }
+
+      it { should respond_with 200 }
+
+      it 'returns just the products that belong to that user' do
+        json_response.each do |product_response|
+          expect(product_response[:user][:email]).to eq user.email
+        end
+      end
+    end
   end
 
   describe 'POST #create' do

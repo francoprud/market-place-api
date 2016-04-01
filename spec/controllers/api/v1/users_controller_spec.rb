@@ -11,6 +11,10 @@ describe Api::V1::UsersController do
     it 'returns the information about the user on a hash' do
       expect(json_response[:email]).to eq user.email
     end
+
+    it 'has the product ids as an embedded object' do
+      expect(json_response[:product_ids]).to eq []
+    end
   end
 
   describe 'POST #create' do
