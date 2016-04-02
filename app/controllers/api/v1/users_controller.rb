@@ -9,7 +9,7 @@ class Api::V1::UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      render json: @user, status: 201, location: [:api, @user]
+      render json: @user, status: 201, location: [:api, @user], root: false
     else
       render json: { errors: @user.errors }, status: 422
     end
@@ -17,7 +17,7 @@ class Api::V1::UsersController < ApplicationController
 
   def update
     if current_user.update(user_params)
-      render json: current_user, status: 200, location: [:api, current_user]
+      render json: current_user, status: 200, location: [:api, current_user], root: false
     else
       render json: { errors: current_user.errors }, status: 422
     end

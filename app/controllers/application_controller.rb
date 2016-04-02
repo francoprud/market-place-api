@@ -5,15 +5,22 @@ class ApplicationController < ActionController::Base
 
   include Authenticable
 
-  # Defines default serializer options for active model serializers
-  def default_serializer_options
-    { root: false }
-  end
-
   # Checks if user from params is equal to current_user
   def user_matches?
     unless current_user == User.find_by(id: params[:user_id])
       render json: { errors: 'Url mismatch' }, status: 400
     end
+  end
+
+  protected
+
+  def pagination(paginated_array, per_page)
+    {
+      pagination: {
+        per_page: params[:per_page],
+        total_pages: paginated_array.total_pages,
+        total_objects: paginated_array.total_count
+      }
+    }
   end
 end

@@ -25,14 +25,16 @@ describe Api::V1::ProductsController do
     it { should respond_with 200 }
 
     it 'returns 5 products from the database' do
-      expect(json_response.count).to eq 5
+      expect(json_response[:products].count).to eq 5
     end
 
     it 'returns the user object into each product' do
-      json_response.each do |product_response|
+      json_response[:products].each do |product_response|
         expect(product_response[:user]).to be_present
       end
     end
+
+    it_behaves_like 'paginated list'
 
     context 'when product_ids parameter is sent' do
       let!(:user)          { create(:user) }
@@ -44,7 +46,7 @@ describe Api::V1::ProductsController do
       it { should respond_with 200 }
 
       it 'returns just the products that belong to that user' do
-        json_response.each do |product_response|
+        json_response[:products].each do |product_response|
           expect(product_response[:user][:email]).to eq user.email
         end
       end

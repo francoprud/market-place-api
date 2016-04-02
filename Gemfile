@@ -20,17 +20,10 @@ gem 'jquery-rails'
 gem 'sdoc', '~> 0.4.0', group: :doc
 # User authentication
 gem 'devise'
-# Use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# Use Unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
-
+# Pagination
+gem 'kaminari'
 # Serializer for active models
-gem 'active_model_serializers'
+gem 'active_model_serializers', '0.8.3'
 
 group :development, :test do
   gem 'byebug'

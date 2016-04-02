@@ -4,7 +4,7 @@ class Api::V1::SessionsController < ApplicationController
     if user && user.valid_password?(password)
       user.generate_authentication_token!
       user.save
-      render json: user, status: 200, location: [:api, user]
+      render json: user, status: 200, location: [:api, user], root: false
     else
       render json: { errors: 'Invalid email or password' }, status: 422
     end

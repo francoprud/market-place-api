@@ -14,8 +14,10 @@ describe Api::V1::OrdersController do
     it { should respond_with 200 }
 
     it 'returns 5 order records from the user' do
-      expect(json_response.count).to eq 5
+      expect(json_response[:orders].count).to eq 5
     end
+
+    it_behaves_like 'paginated list'
   end
 
   describe 'GET #show' do
