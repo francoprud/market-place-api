@@ -82,11 +82,16 @@ describe Api::V1::OrdersController do
 
     context 'when is successfully created' do
       before(:each) do
-          api_authorization_header user.auth_token
-          post :create, user_id: user.id, order: order_params
-        end
+        ActionMailer::Base.deliveries.clear # Clear the array of delivers
+        api_authorization_header user.auth_token
+        post :create, user_id: user.id, order: order_params
+      end
 
       it { should respond_with 201 }
+
+      it 'sends an email to the user owner of the order' do
+        expect(ActionMailer::Base.deliveries.count).to eq 1
+      end
 
       it 'returns the just user order record' do
         expect(json_response[:id]).to be_present
