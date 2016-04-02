@@ -78,7 +78,7 @@ describe Api::V1::OrdersController do
   describe 'POST #create' do
     let!(:user)         { create(:user) }
     let!(:products)     { create_list(:product, 3, user: user) }
-    let!(:order_params) {{ product_ids: Product.all.ids }}
+    let!(:order_params) {{ product_ids_and_quantities: Product.all.map { |p| [p.id, 1] } }}
 
     context 'when is successfully created' do
       before(:each) do

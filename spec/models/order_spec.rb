@@ -26,4 +26,14 @@ describe Order do
       expect(order.total).to eq expected_total
     end
   end
+
+  describe '#build_placements_with_product_ids_and_quantities' do
+    let!(:first_product)  { create(:product, price: 50.0) }
+    let!(:second_product) { create(:product, price: 100.0) }
+    let!(:order_quantities) { [[first_product.id, 2], [second_product.id, 3]] }
+
+    it 'builds 2 placements for the order' do
+      expect { order.build_placements_with_product_ids_and_quantities(order_quantities) }.to change { order.placements.size }.from(1).to(3)
+    end
+  end
 end
