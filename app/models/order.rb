@@ -10,7 +10,7 @@ class Order < ActiveRecord::Base
   before_validation :set_total!
 
   def set_total!
-    self.total = products.map(&:price).sum
+    self.total = placements.map { |placement| placement.product.price * placement.quantity }.sum
   end
 
   def build_placements_with_product_ids_and_quantities(product_ids_and_quantities = [])
