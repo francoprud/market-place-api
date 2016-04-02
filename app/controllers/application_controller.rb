@@ -9,4 +9,11 @@ class ApplicationController < ActionController::Base
   def default_serializer_options
     { root: false }
   end
+
+  # Checks if user from params is equal to current_user
+  def user_matches?
+    unless current_user == User.find_by(id: params[:user_id])
+      render json: { errors: 'Url mismatch' }, status: 400
+    end
+  end
 end

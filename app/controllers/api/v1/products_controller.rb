@@ -47,11 +47,4 @@ class Api::V1::ProductsController < ApplicationController
   def product_params
     params.require(:product).permit(:title, :price, :published)
   end
-
-  # Checks if user from params is equal to current_user
-  def user_matches?
-    unless current_user == User.find_by(id: params[:user_id])
-      render json: { errors: 'Url mismatch' }, status: 400
-    end
-  end
 end
