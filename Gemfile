@@ -24,6 +24,8 @@ gem 'devise'
 gem 'kaminari'
 # Serializer for active models
 gem 'active_model_serializers', '0.8.3'
+# Delayed jobs
+gem 'delayed_job_active_record'
 
 group :development, :test do
   gem 'byebug'
