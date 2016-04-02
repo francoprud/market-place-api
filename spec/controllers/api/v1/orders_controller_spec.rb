@@ -19,8 +19,9 @@ describe Api::V1::OrdersController do
   end
 
   describe 'GET #show' do
-    let!(:user)  { create(:user) }
-    let!(:order) { create(:order, user: user) }
+    let!(:user)    { create(:user) }
+    let!(:product) { create(:product) }
+    let!(:order)   { create(:order, user: user, product_ids: [product.id]) }
 
     context 'when order exists and is from user' do
       before(:each) do
@@ -32,6 +33,14 @@ describe Api::V1::OrdersController do
 
       it 'returns the user order record matching the id' do
         expect(json_response[:id]).to eq order.id
+      end
+
+      it 'includes the total of the order' do
+        expect(json_response[:total]).to be_present
+      end
+
+      it 'includes the products of the order' do
+        expect(json_response[:products].count).to eq 1
       end
     end
 
