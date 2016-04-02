@@ -36,4 +36,16 @@ describe Order do
       expect { order.build_placements_with_product_ids_and_quantities(order_quantities) }.to change { order.placements.size }.from(1).to(3)
     end
   end
+
+  describe '#valid?' do
+    let!(:first_product)    { create(:product, price: 100, quantity: 5) }
+    let!(:second_product)   { create(:product, price: 100, quantity: 10) }
+    let!(:first_placement)  { build(:placement, product: first_product, quantity: 3) }
+    let!(:second_placement) { build(:placement, product: second_product, quantity: 15) }
+    let!(:order)            { build(:order, placements: [first_placement, second_placement]) }
+
+    it 'becomes invalid due to insufficient products' do
+      expect(order).to_not be_valid
+    end
+  end
 end
