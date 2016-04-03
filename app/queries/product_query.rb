@@ -17,7 +17,7 @@ class ProductQuery
   private
 
   def product_ids(product_ids)
-    @products = products.where(id: query_params[:product_ids])
+    @products = products.where(id: product_ids)
   end
 
   def keyword(title_keyword)
