@@ -34,6 +34,8 @@ group :development, :test do
 end
 
 group :test do
+  # Code Climate test coverage integration
+  gem 'codeclimate-test-reporter'
   gem 'rspec-rails', '~> 3.0'
   gem 'shoulda', '~> 3.5'
   gem 'shoulda-matchers', '~> 2.0'
